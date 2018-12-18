@@ -1,0 +1,60 @@
+<div class="quick-links">
+    <h5>
+        Active Incidents</h5>
+    <ul id="incident-list">
+    </ul>
+</div>
+<div class="quick-links">
+    <h5>
+        Scheduled Maintenance</h5>
+    <ul id="maintenance-list">
+    </ul>
+</div>
+<p>&nbsp;</p>
+<script type="text/javascript" src="https://cdn.statuspage.io/se-v2.js"></script><script>
+ var listElement = document.getElementById("maintenance-list");
+ var activeList = document.getElementById("incident-list");
+ var sp = new StatusPage.page({ page : '2z1s8gh0c177' });
+ sp.scheduled_maintenances({
+   filter : 'upcoming',
+   success: function(data) {
+     var index, len;
+     console.log(data.scheduled_maintenances.length);
+     len = data.scheduled_maintenances.length
+     while (listElement.firstChild) {listElement.removeChild(listElement.firstChild);}
+     for (index = 0; index < len; index++) {
+        var listItem = document.createElement('li');
+        listItem.innerHTML = '<a href="'+data.scheduled_maintenances[index].shortlink+'">'+data.scheduled_maintenances[index].name+'</a>';
+        listElement.appendChild(listItem);
+        console.log(index);
+        console.log(data.scheduled_maintenances[index].name);
+        console.log(data.scheduled_maintenances[index].id);
+        console.log(data.scheduled_maintenances[index].impact);
+     }
+   }
+ })
+ sp.incidents({
+   filter : 'unresolved',
+   success: function(data) {
+     var index, len;
+     console.log(data.incidents.length);
+     len = data.incidents.length
+     while (activeList.firstChild) {activeList.removeChild(activeList.firstChild);}
+      if (len==0) {
+         console.log("empty recordset");
+        var listItem = document.createElement('li');
+        listItem.innerHTML = '<a href="https://status.rice.edu">View Previous Incidents</a>';
+        activeList.appendChild(listItem);
+      }
+     for (index = 0; index < len; index++) {
+        var listItem = document.createElement('li');
+        listItem.innerHTML = '<a href="'+data.incidents[index].shortlink+'">'+data.incidents[index].name+'</a>';
+        activeList.appendChild(listItem);
+        console.log(index);
+        console.log(data.incidents[index].name);
+        console.log(data.incidents[index].id);
+        console.log(data.incidents[index].impact);
+     }
+   }
+ })
+</script>
